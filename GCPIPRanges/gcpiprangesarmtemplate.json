@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String"
+    },
+    "location": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2017-03-15-preview",
+      "name": "[parameters('workspaceName')]",
+      "location": "[parameters('location')]",
+      "resources": [
+        {
+          "type": "savedSearches",
+          "apiVersion": "2020-08-01",
+          "name": "GetGCPIPRanges",
+          "dependsOn": [
+            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+          ],
+          "properties": {
+            "etag": "*",
+            "displayName": "GetGCPIPRanges",
+            "category": "Security",
+            "FunctionAlias": "GetGCPIPRanges",
+            "query": "externaldata(ip_prefix: string)[ h@'https://www.gstatic.com/ipranges/cloud.json']with(format='multijson', ingestionMapping='[{\"Column\":\"ip_prefix\",\"Properties\":{\"Path\":\"$.prefixes\"}},{\"Column\":\"ipv4Prefix\",\"Properties\":{\"Path\":\"$.prefixes.ipv4Prefix\"}}]')| mv-expand todynamic(ip_prefix)| extend ipv4Prefix_ = tostring(ip_prefix.ipv4Prefix)| extend scope_ = tostring(ip_prefix.scope)| extend service_ = tostring(ip_prefix.service)| project-away ip_prefix",
+            "version": 1
+          }
+        }
+      ]
+    }
+  ]
+}
