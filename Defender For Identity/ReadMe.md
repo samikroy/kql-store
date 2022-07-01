@@ -136,3 +136,94 @@ data
 | make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by AccountUpn
 ) on $left.AccountUpn == $right.AccountUpn
 ```
+
+### Query Events
+<hr>
+
+#### Device Query Summary
+```
+let data = IdentityQueryEvents
+| extend TO_DEVICE = tostring(AdditionalFields.["TO.DEVICE"]);
+data
+| summarize count() by QueryType, TO_DEVICE
+| join kind =inner 
+(
+data
+| make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by QueryType, TO_DEVICE
+) on $left.QueryType == $right.QueryType and $left.TO_DEVICE== $right.TO_DEVICE
+```
+#### Query Summary from Source Devices
+
+```
+let data = IdentityQueryEvents;
+data
+| summarize count() by DeviceName
+| join kind =inner 
+(
+data
+| make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by DeviceName
+) on $left.DeviceName == $right.DeviceName
+```
+
+### Directort Events
+<hr>
+
+#### Timeline on ActionType
+
+```
+IdentityDirectoryEvents
+| make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ActionType 
+```
+
+#### Top 10 Actions
+
+```
+IdentityDirectoryEvents
+| summarize count() by ActionType 
+| order by count_ desc
+```
+
+#### Account Trend on Directory Events
+
+```
+IdentityDirectoryEvents
+| make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by AccountUpn
+```
+
+
+### Alerts
+<hr>
+
+#### Alert Trend
+
+```
+let data = SecurityAlert
+| where ProductName == "Azure Advanced Threat Protection"
+| summarize arg_max(TimeGenerated,*) by SystemAlertId;
+data
+| summarize count() by AlertName
+| join kind=inner 
+(
+data
+| make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by AlertName
+) on AlertName
+```
+
+#### Impacted Hosted
+
+```
+let data = SecurityAlert
+| where ProductName == "Azure Advanced Threat Protection"
+| summarize arg_max(TimeGenerated,*) by SystemAlertId
+| mv-expand todynamic(Entities)
+| where Entities["Type"] == "host"
+| where isnotempty(Entities["HostName"])
+| extend HostName = tostring(Entities["HostName"]);
+data
+| summarize count() by HostName
+| join kind=inner 
+(
+data
+| make-series Trend = count() default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by HostName
+) on $left.HostName == $right.HostName
+```
