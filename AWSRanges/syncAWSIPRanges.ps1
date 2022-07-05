@@ -1,6 +1,6 @@
 $DownloadURL = "https://ip-ranges.amazonaws.com/ip-ranges.json"
 $Response = Invoke-RestMethod -URI $DownloadURL
-$downloadedJson = $Response.prefixes
+$downloadedJson = $Response.prefixes | ConvertTo-Json
 
 write-host "File Fetch completed."
 
