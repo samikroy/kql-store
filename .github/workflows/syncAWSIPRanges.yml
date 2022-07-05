@@ -1,0 +1,16 @@
+name: main
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 */5 * * *'
+jobs:
+  build:
+
+    runs-on: windows-2019
+    steps:
+      - name: Check out repo        
+        uses: actions/checkout@v2
+      - run: |
+          ./AWSRanges/syncAWSIPRanges.ps1      
