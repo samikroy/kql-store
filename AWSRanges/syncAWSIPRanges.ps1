@@ -5,7 +5,7 @@ $downloadedJson = $Response.prefixes
 write-host "File Fetch completed."
 
 #decleration
-$file = ".\awsipranges.json"
+$file = ".\awsranges\awsipranges.json"
 $wi = "#13 #14"
 
 "Set config"
