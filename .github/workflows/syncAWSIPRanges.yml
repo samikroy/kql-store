@@ -13,4 +13,4 @@ jobs:
       - name: Check out repo        
         uses: actions/checkout@v2
       - run: |
-          ./AWSRanges/syncAWSIPRanges.ps1      
+          ./AWSIPRanges/syncAWSIPRanges.ps1      
