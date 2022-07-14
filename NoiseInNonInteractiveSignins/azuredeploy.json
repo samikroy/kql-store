@@ -19,16 +19,38 @@
         {
           "type": "savedSearches",
           "apiVersion": "2020-08-01",
-          "name": "FailedLoginsToApps",
+          "name": "Top10NonInteractiveSigninFailedApps",
           "dependsOn": [
             "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
           ],
           "properties": {
             "etag": "*",
-            "displayName": "FailedLoginsToApps",
+            "displayName": "Top10NonInteractiveSigninFailedApps",
             "category": "Security",
-            "FunctionAlias": "FailedLoginsToApps",
-            "query": "AADNonInteractiveUserSignInLogs | extend ErrorCode = tostring(parse_json(Status).errorCode) | summarize TotalLogins = count(),SuccessfulLogins = countif(ErrorCode == 0),FailedLogins = countif(ErrorCode != 0),Users = make_set(UserPrincipalName)by AppDisplayName, ClientAppUsed | where FailedLogins > 0 | project UserCount = array_length(Users),AppDisplayName, ClientAppUsed | render columnchart ",            
+            "FunctionAlias": "AADNonInteractiveUserSignInLogs | extend ErrorCode = tostring(parse_json(Status).errorCode) | summarize TotalLogins = count(),SuccessfulLogins = countif(ErrorCode == 0),FailedLogins = countif(ErrorCode != 0), Users = make_set(UserPrincipalName) by AppDisplayName, ClientAppUsed | where FailedLogins > 0 | project UserCount = array_length(Users),AppDisplayName,ClientAppUsed | take 10 | render columnchart ",            
+            "version": 1
+          }
+        }
+      ]
+    },
+	{
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2017-03-15-preview",
+      "name": "[parameters('workspaceName')]",
+      "location": "[parameters('location')]",
+      "resources": [
+        {
+          "type": "savedSearches",
+          "apiVersion": "2020-08-01",
+          "name": "Top10NonInteractiveSigninFailedUsers",
+          "dependsOn": [
+            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+          ],
+          "properties": {
+            "etag": "*",
+            "displayName": "Top10NonInteractiveSigninFailedUsers",
+            "category": "Security",
+            "FunctionAlias": "AADNonInteractiveUserSignInLogs | extend ErrorCode = tostring(parse_json(Status).errorCode) | summarize TotalLogins = count(), SuccessfulLogins = countif(ErrorCode == 0), FailedLogins = countif(ErrorCode != 0), Apps = make_set(AppDisplayName), ClientApps = make_set(ClientAppUsed) by UserPrincipalName | where FailedLogins > 0 | order by FailedLogins desc | project-away TotalLogins | take 10 | render columnchart ",            
             "version": 1
           }
         }
