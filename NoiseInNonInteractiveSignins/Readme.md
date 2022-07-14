@@ -34,6 +34,7 @@ by UserPrincipalName
 | project-away TotalLogins
 | take 10
 | render columnchart 
+```
 
 And you can easily deploy
 
