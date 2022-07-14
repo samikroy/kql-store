@@ -1,6 +1,6 @@
 ## Non Interective SingnIn Logs
 
-### Here is the query to test the same 
+### Top 10 Applications having failed logins
 
 ```
 AADNonInteractiveUserSignInLogs
