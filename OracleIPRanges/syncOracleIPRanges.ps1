@@ -1,6 +1,6 @@
 $DownloadURL = "https://docs.oracle.com/en-us/iaas/tools/public_ip_ranges.json"
 $Response = Invoke-RestMethod -URI $DownloadURL
-$downloadedJson = $Response.prefixes | ConvertTo-Json
+$downloadedJson = $Response.regions | ConvertTo-Json
 
 write-host "File Fetch completed."
 
