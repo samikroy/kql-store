@@ -28,7 +28,7 @@
             "displayName": "GetOracleIPRanges",
             "category": "Security",
             "FunctionAlias": "GetOracleIPRanges",
-            "query": "externaldata(Region:string , CIDRS: string )[ h@'https://raw.githubusercontent.com/samikroy/kql-store/main/OracleIPRanges/oracleipranges.json'] with(format='multijson', ingestionMapping='[\"Column\":\"Region\",\"Properties\":{\"Path\":\"$.region\"}},{\"Column\":\"CIDRS\",\"Properties\":{\"Path\":\"$.cidrs\"}}]')| mv-expand todynamic(CIDRS)| extend CIDR = CIDRS.cidr| extend Tags = CIDRS.tags| mv-expand Tags| project Region, CIDR, Tags",
+            "query": "externaldata(Region:string , CIDRS: string )[ h@'https://raw.githubusercontent.com/samikroy/kql-store/main/OracleIPRanges/oracleipranges.json'] with(format='multijson', ingestionMapping='[{\"Column\":\"Region\",\"Properties\":{\"Path\":\"$.region\"}},{\"Column\":\"CIDRS\",\"Properties\":{\"Path\":\"$.cidrs\"}}]')| mv-expand todynamic(CIDRS)| extend CIDR = CIDRS.cidr| extend Tags = CIDRS.tags| mv-expand Tags| project Region, CIDR, Tags",
             "version": 1
           }
         }
