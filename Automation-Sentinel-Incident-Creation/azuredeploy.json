@@ -7,7 +7,7 @@
             "type": "String"
         },
         "WorkspaceName": {
-            "defaultValue": "<name of the workspace.>",
+            "defaultValue": "sentinel-sadbox-demo",
             "type": "String"
         }
     },
@@ -22,6 +22,7 @@
             "apiVersion": "2016-06-01",
             "name": "[variables('Office365Connection')]",
             "location": "[resourceGroup().location]",
+            "kind": "V1",
             "properties": {
                 "displayName": "[variables('Office365Connection')]",
                 "customParameterValues": {},
@@ -118,14 +119,14 @@
                 "parameters": {
                     "$connections": {
                         "value": {
-                            "azuresentinel": {
+                            "AzureSentinelConnection": {
                                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('AzureSentinelConnection'))]",
                                 "connectionName": "[variables('AzureSentinelConnection')]",
                                 "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azuresentinel')]"
                             },
-                            "office365": {
+                            "Office365Connection": {
                                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('Office365Connection'))]",
-                                "connectionName": "office365",
+                                "connectionName":  "[variables('Office365Connection')]",
                                 "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/office365')]"
                             }
                         }
