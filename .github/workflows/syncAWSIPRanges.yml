@@ -1,6 +1,6 @@
-name: main
+name: Sync-AWS-IP-Ranges
 on:
-  push:
+  repository_dispatch:
 
   schedule:
     - cron: '*/5 * * * *'
