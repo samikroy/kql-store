@@ -1,11 +1,11 @@
 $DownloadURL = "https://api.config.zscaler.com/zscalerthree.net/cenr/json"
 $Response = Invoke-RestMethod -URI $DownloadURL
-$downloadedJson = $Response | ConvertTo-Json
+$downloadedJson = $Response | ConvertTo-Json -Depth 5
 
 write-host "File Fetch completed."
 
 #decleration
-$file = ".\zscaleripranges\zscaleripranges.json"
+$file = ".\Zscaler\zscaleripranges.json"
 $wi = "#13 #14"
 
 "Set config"
