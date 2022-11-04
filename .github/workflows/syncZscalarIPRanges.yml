@@ -12,4 +12,4 @@ jobs:
       - name: Check out repo        
         uses: actions/checkout@v2
       - run: |
-          ./Zscaler/SyncZscalerIPRanges.ps1      
+          ./Zscaler/SyncZscalerIPRanges.ps1   
