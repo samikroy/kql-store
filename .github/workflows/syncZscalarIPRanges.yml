@@ -1,6 +1,5 @@
 name: Sync-Zscalar-IP-Ranges
 on:
-  on:
   repository_dispatch:
 
   schedule:
