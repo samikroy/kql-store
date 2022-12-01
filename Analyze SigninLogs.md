@@ -1,6 +1,6 @@
 
 
-Query 1 : Take 1 from SignIn Logs to verify the data set existance.
+Query 1 : Take 1 from SignIn Logs to verify the data set existence.
 
 ```
 SigninLogs
