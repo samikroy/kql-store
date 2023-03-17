@@ -9,7 +9,6 @@ Query
 
 
 ```
-
 _SentinelAudit()
 | where SentinelResourceType =="Analytic Rule" and Description == "Create or update analytics rule."
 | extend SentinelResourceId = tostring(ExtendedProperties.ResourceId)
@@ -18,6 +17,8 @@ _SentinelAudit()
 | extend CallerName_ = tostring(ExtendedProperties.CallerName)
 | extend CallerIpAddress_ = tostring(ExtendedProperties.CallerIpAddress)
 | summarize arg_max(TimeGenerated,*) by query_, CallerIpAddress_, CallerName_, SentinelResourceName
+| project TimeGenerated, CallerName_, CallerIpAddress_,SentinelResourceName, query_
+| order by SentinelResourceName
 
 ```
 
@@ -56,7 +57,7 @@ Here is the code for ARM Template
             "displayName": "_AuditSentinelAnalytics",
             "category": "Security",
             "FunctionAlias": "_AuditSentinelAnalytics",
-            "query": "_SentinelAudit() | where SentinelResourceType =="Analytic Rule" and Description == "Create or update analytics rule." | extend SentinelResourceId = tostring(ExtendedProperties.ResourceId) | project TimeGenerated, SentinelResourceName, Status, Description, SentinelResourceKind, ExtendedProperties | extend query_ = tostring(parse_json(tostring(parse_json(tostring(ExtendedProperties.UpdatedResourceState)).properties)).query) | extend CallerName_ = tostring(ExtendedProperties.CallerName) | extend CallerIpAddress_ = tostring(ExtendedProperties.CallerIpAddress) | summarize arg_max(TimeGenerated,*) by query_, CallerIpAddress_, CallerName_, SentinelResourceName",
+            "query": "_SentinelAudit() | where SentinelResourceType =="Analytic Rule" and Description == "Create or update analytics rule." | extend SentinelResourceId = tostring(ExtendedProperties.ResourceId) | project TimeGenerated, SentinelResourceName, Status, Description, SentinelResourceKind, ExtendedProperties | extend query_ = tostring(parse_json(tostring(parse_json(tostring(ExtendedProperties.UpdatedResourceState)).properties)).query) | extend CallerName_ = tostring(ExtendedProperties.CallerName) | extend CallerIpAddress_ = tostring(ExtendedProperties.CallerIpAddress) | summarize arg_max(TimeGenerated,*) by query_, CallerIpAddress_, CallerName_, SentinelResourceName | project TimeGenerated, CallerName_, CallerIpAddress_,SentinelResourceName, query_ | order by SentinelResourceName",
             "version": 1
           }
         }
