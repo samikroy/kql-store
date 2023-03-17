@@ -48,15 +48,15 @@ Here is the code for ARM Template
         {
           "type": "savedSearches",
           "apiVersion": "2020-08-01",
-          "name": "_AuditSentinelAnalytics",
+          "name": "AuditSentinelAnalytics",
           "dependsOn": [
             "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
           ],
           "properties": {
             "etag": "*",
-            "displayName": "_AuditSentinelAnalytics",
+            "displayName": "AuditSentinelAnalytics",
             "category": "Security",
-            "FunctionAlias": "_AuditSentinelAnalytics",
+            "FunctionAlias": "AuditSentinelAnalytics",
             "query": "_SentinelAudit() | where SentinelResourceType ==\"Analytic Rule\" and Description == \"Create or update analytics rule.\" | extend SentinelResourceId = tostring(ExtendedProperties.ResourceId) | project TimeGenerated, SentinelResourceName, Status, Description, SentinelResourceKind, ExtendedProperties | extend query_ = tostring(parse_json(tostring(parse_json(tostring(ExtendedProperties.UpdatedResourceState)).properties)).query) | extend CallerName_ = tostring(ExtendedProperties.CallerName) | extend CallerIpAddress_ = tostring(ExtendedProperties.CallerIpAddress) | summarize arg_max(TimeGenerated,*) by query_, CallerIpAddress_, CallerName_, SentinelResourceName | project TimeGenerated, CallerName_, CallerIpAddress_,SentinelResourceName, query_ | order by SentinelResourceName",
             "version": 1
           }
