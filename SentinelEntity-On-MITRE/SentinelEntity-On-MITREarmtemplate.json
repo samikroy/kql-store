@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String"
+    },
+    "location": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2017-03-15-preview",
+      "name": "[parameters('workspaceName')]",
+      "location": "[parameters('location')]",
+      "resources": [
+        {
+          "type": "savedSearches",
+          "apiVersion": "2020-08-01",
+          "name": "SentinelEntityOnMITRE",
+          "dependsOn": [
+            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
+          ],
+          "properties": {
+            "etag": "*",
+            "displayName": "SentinelEntityOnMITRE",
+            "category": "Security",
+            "FunctionAlias": "SentinelEntityOnMITRE",
+            "query": "SecurityAlert| where TimeGenerated > ago(14d) | summarize arg_max(TimeGenerated,*) by SystemAlertId | where isnotempty(Tactics) | extend Tactics = split(Tactics,',') | mv-expand Tactics | extend Tactics = tostring(Tactics) | mv-expand todynamic(Entities) | extend EntityType = tostring(Entities.Type) | summarize count() by Tactics, EntityType | render columnchart",
+            "version": 1
+          }
+        }
+      ]
+    }
+  ]
+}
