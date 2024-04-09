@@ -1,4 +1,4 @@
-### Azure Open AI Monitoring Workbook
+### Azure Open AI Monitoring Workbook Queries
 
 ####   Open AI Operations
 ```
