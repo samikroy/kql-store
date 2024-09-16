@@ -1,4 +1,4 @@
-### Microsoft Coplit for Security Workbook Queries
+### Microsoft Coplit for Security Monitoring Workbook Queries
 
 #### Use the below to deplot the workbook in your environment
 
