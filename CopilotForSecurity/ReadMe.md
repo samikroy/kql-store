@@ -7,7 +7,7 @@
 ### Use below queries for know the specific details about the Microsoft Copilot for Security
 
 
-### Ovreview 
+### Overview 
 
 #### User Signins across the globe
 
